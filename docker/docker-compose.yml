@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: desta-postgres
+    environment:
+      POSTGRES_USER: desta_user
+      POSTGRES_PASSWORD: desta_password
+      POSTGRES_DB: desta_market
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - desta-network
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: ../docker/Dockerfile.backend
+    container_name: desta-backend
+    environment:
+      DATABASE_URL: postgresql://desta_user:desta_password@postgres:5432/desta_market
+      JWT_SECRET: your-jwt-secret-key-change-in-production
+      FRONTEND_URL: http://localhost:3000
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+    networks:
+      - desta-network
+    volumes:
+      - ../backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ../apps/web
+      dockerfile: ../../docker/Dockerfile.frontend
+    container_name: desta-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - desta-network
+    volumes:
+      - ../apps/web:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
+
+networks:
+  desta-network:
+    driver: bridge

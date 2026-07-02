@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SHOPKEEPER
+  SUPPLIER
+  AGENT
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  HELD_IN_ESCROW
+  RELEASED
+  FAILED
+}
+
+enum DeliveryStatus {
+  ASSIGNED
+  PICKED_UP
+  IN_TRANSIT
+  DELIVERED
+  CANCELLED
+}
+
+model User {
+  id               String       @id @default(uuid())
+  name             String
+  email            String       @unique
+  password         String
+  role             UserRole
+  createdAt        DateTime     @default(now())
+  
+  products         Product[]
+  ordersAsShopkeeper Order[]    @relation("ShopkeeperOrders")
+  ordersAsSupplier  Order[]     @relation("SupplierOrders")
+  deliveriesAsAgent Delivery[]
+  
+  @@map("users")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  price       Float
+  stock       Int
+  supplierId  String
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  
+  supplier    User     @relation(fields: [supplierId], references: [id])
+  
+  @@map("products")
+}
+
+model Order {
+  id           String      @id @default(uuid())
+  shopkeeperId String
+  supplierId   String
+  status       OrderStatus @default(PENDING)
+  total        Float
+  createdAt    DateTime    @default(now())
+  
+  shopkeeper   User        @relation("ShopkeeperOrders", fields: [shopkeeperId], references: [id])
+  supplier     User        @relation("SupplierOrders", fields: [supplierId], references: [id])
+  payments     Payment[]
+  delivery     Delivery?
+  
+  @@map("orders")
+}
+
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String
+  amount        Float
+  transactionId String        @unique
+  status        PaymentStatus @default(PENDING)
+  createdAt     DateTime      @default(now())
+  
+  order         Order         @relation(fields: [orderId], references: [id])
+  
+  @@map("payments")
+}
+
+model Delivery {
+  id        String         @id @default(uuid())
+  orderId   String         @unique
+  agentId   String
+  latitude  Float          @default(0)
+  longitude Float          @default(0)
+  status    DeliveryStatus @default(ASSIGNED)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  
+  order     Order          @relation(fields: [orderId], references: [id])
+  agent     User           @relation(fields: [agentId], references: [id])
+  
+  @@map("deliveries")
+}
+
+model OTP {
+  id        String   @id @default(uuid())
+  email     String
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@map("otps")
+}
