@@ -43,7 +43,7 @@ export class OrdersService {
     });
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED') {
     return this.prisma.order.update({
       where: { id },
       data: { status },

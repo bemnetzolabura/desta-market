@@ -36,6 +36,6 @@ export class OrdersController {
   @UseGuards(JwtAuthGuard)
   @Put(':id/status')
   updateStatus(@Param('id') id: string, @Body() body: { status: string }) {
-    return this.ordersService.updateStatus(id, body.status);
+    return this.ordersService.updateStatus(id, body.status as 'PENDING' | 'CONFIRMED' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED');
   }
 }

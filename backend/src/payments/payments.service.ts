@@ -22,7 +22,7 @@ export class PaymentsService {
     });
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: 'PENDING' | 'HELD_IN_ESCROW' | 'RELEASED' | 'FAILED') {
     return this.prisma.payment.update({
       where: { id },
       data: { status },

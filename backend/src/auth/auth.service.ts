@@ -12,7 +12,7 @@ export class AuthService {
 
   async register(email: string, password: string, name: string, role: string) {
     const hashedPassword = await bcrypt.hash(password, 10);
-    return this.usersService.create(email, hashedPassword, name, role);
+    return this.usersService.create(email, hashedPassword, name, role as 'SHOPKEEPER' | 'SUPPLIER' | 'AGENT' | 'ADMIN');
   }
 
   async login(email: string, password: string) {

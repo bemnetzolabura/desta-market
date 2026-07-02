@@ -21,7 +21,7 @@ export class PaymentsController {
   @UseGuards(JwtAuthGuard)
   @Put(':id/status')
   updateStatus(@Param('id') id: string, @Body() body: { status: string }) {
-    return this.paymentsService.updateStatus(id, body.status);
+    return this.paymentsService.updateStatus(id, body.status as 'PENDING' | 'HELD_IN_ESCROW' | 'RELEASED' | 'FAILED');
   }
 
   @UseGuards(JwtAuthGuard)

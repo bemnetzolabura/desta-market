@@ -24,7 +24,7 @@ export class DeliveryController {
   @UseGuards(JwtAuthGuard)
   @Put(':id/status')
   updateStatus(@Param('id') id: string, @Body() body: { status: string }) {
-    return this.deliveryService.updateStatus(id, body.status);
+    return this.deliveryService.updateStatus(id, body.status as 'ASSIGNED' | 'PICKED_UP' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED');
   }
 
   @UseGuards(JwtAuthGuard)

@@ -24,7 +24,7 @@ export class DeliveryService {
     });
   }
 
-  async updateStatus(id: string, status: string) {
+  async updateStatus(id: string, status: 'ASSIGNED' | 'PICKED_UP' | 'IN_TRANSIT' | 'DELIVERED' | 'CANCELLED') {
     return this.prisma.delivery.update({
       where: { id },
       data: { status },

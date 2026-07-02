@@ -107,7 +107,7 @@ npm install
 
 Create `backend/.env`:
 ```env
-DATABASE_URL="postgresql://desta_user:desta_password@localhost:5432/desta_market"
+DATABASE_URL="postgresql://desta_user:desta_password@localhost:5433/desta_market"
 JWT_SECRET="your-jwt-secret-key-change-in-production"
 FRONTEND_URL="http://localhost:3000"
 PORT=3001
