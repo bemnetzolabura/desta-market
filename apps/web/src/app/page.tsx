@@ -1,65 +1,139 @@
-import Image from "next/image";
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/store';
+import { Store, ArrowRight, CheckCircle, Users, Package, Truck, Shield } from 'lucide-react';
+import Link from 'next/link';
 
 export default function Home() {
+  const router = useRouter();
+  const { isAuthenticated } = useAuthStore();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, router]);
+
+  if (isAuthenticated) {
+    return null;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-slate-100">
+      <nav className="bg-white border-b border-slate-200 px-6 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Store className="h-8 w-8 text-emerald-600" />
+            <span className="text-2xl font-bold text-slate-800">DESTA MARKET</span>
+          </div>
+          <div className="flex gap-4">
+            <Link href="/login">
+              <button className="px-4 py-2 text-slate-600 hover:text-slate-800 font-medium">
+                Sign In
+              </button>
+            </Link>
+            <Link href="/register">
+              <button className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium">
+                Get Started
+              </button>
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </nav>
+
+      <main className="max-w-7xl mx-auto px-6 py-16">
+        <div className="text-center mb-16">
+          <h1 className="text-5xl font-bold text-slate-800 mb-6">
+            Ethiopia's Premier B2B Marketplace
+          </h1>
+          <p className="text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
+            Connect shopkeepers, suppliers, and delivery agents in one powerful platform. 
+            Streamline your supply chain with real-time tracking and secure payments.
+          </p>
+          <div className="flex gap-4 justify-center">
+            <Link href="/register">
+              <button className="px-8 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-medium flex items-center gap-2">
+                Start Free Trial
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </Link>
+            <button className="px-8 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 font-medium">
+              Learn More
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {[
+            {
+              icon: Users,
+              title: 'For Shopkeepers',
+              description: 'Browse products from multiple suppliers, place orders, and track deliveries in real-time.',
+              color: 'bg-blue-500',
+            },
+            {
+              icon: Package,
+              title: 'For Suppliers',
+              description: 'Manage your inventory, receive orders, and grow your business with secure payments.',
+              color: 'bg-emerald-500',
+            },
+            {
+              icon: Truck,
+              title: 'For Delivery Agents',
+              description: 'Accept delivery requests, track routes, and earn money with flexible schedules.',
+              color: 'bg-orange-500',
+            },
+          ].map((feature, index) => {
+            const Icon = feature.icon;
+            return (
+              <div key={index} className="bg-white rounded-xl shadow-sm p-6 border border-slate-200 hover:shadow-md transition">
+                <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center mb-4`}>
+                  <Icon className="h-6 w-6 text-white" />
+                </div>
+                <h3 className="text-xl font-semibold text-slate-800 mb-2">{feature.title}</h3>
+                <p className="text-slate-600">{feature.description}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <div className="bg-white rounded-xl shadow-sm p-8 border border-slate-200">
+          <h2 className="text-2xl font-bold text-slate-800 mb-6 text-center">Why Choose DESTA MARKET?</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { icon: Shield, title: 'Secure Payments', description: 'Telebirr-like escrow system protects both buyers and sellers' },
+              { icon: Truck, title: 'Real-time Tracking', description: 'GPS-enabled delivery tracking with live updates' },
+              { icon: CheckCircle, title: 'Verified Sellers', description: 'All suppliers are verified for quality and reliability' },
+              { icon: Users, title: '24/7 Support', description: 'Dedicated customer support for all users' },
+            ].map((feature, index) => {
+              const Icon = feature.icon;
+              return (
+                <div key={index} className="text-center">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Icon className="h-6 w-6 text-emerald-600" />
+                  </div>
+                  <h3 className="font-semibold text-slate-800 mb-1">{feature.title}</h3>
+                  <p className="text-sm text-slate-600">{feature.description}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </main>
+
+      <footer className="bg-slate-900 text-white py-8 mt-16">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Store className="h-6 w-6 text-emerald-400" />
+            <span className="text-xl font-bold">DESTA MARKET</span>
+          </div>
+          <p className="text-slate-400 text-sm">
+            © 2024 DESTA B2B MARKET. All rights reserved. Ethiopian B2B Marketplace Platform.
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
