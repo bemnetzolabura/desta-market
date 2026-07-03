@@ -13,7 +13,9 @@ interface LoginResponse {
 interface RegisterData {
   email: string;
   password: string;
-
+  name: string;
+  role: string;
+}
 
 interface RegisterData {
   email: string;
