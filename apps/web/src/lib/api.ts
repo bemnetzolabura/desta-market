@@ -6,9 +6,14 @@ interface LoginResponse {
     id: string;
     email: string;
     name: string;
-    role: string;      // ← this is the problem line
+    role: 'SHOPKEEPER' | 'SUPPLIER' | 'AGENT' | 'ADMIN';
   };
 }
+
+interface RegisterData {
+  email: string;
+  password: string;
+
 
 interface RegisterData {
   email: string;
